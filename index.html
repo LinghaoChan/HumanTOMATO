@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head -->
+
+<head>
+  <!-- Standard metadata -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>HumanTOMATO: Text-aligned Whole-body Motion Generation</title>
+  <meta name="author" content="Jiawei Zhang" />
+  <meta name="description" content="Masked Motion Completion for Human Motion Prediction" />
+  <meta name="keywords" content="HumanMAC " />
+
+  <!-- Google Search Verification -->
+  <!-- <meta name="google-site-verification" content="aF7wSOljWeE2IT3HvAhPwdnNxup1zdKCrFf50yCFMoE" /> -->
+
+  <!-- Bootstrap & MDB -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha256-DF7Zhf293AJxJNTmh5zhoYYIMs2oXitRfBjY+9L//AY=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/css/mdb.min.css"
+    integrity="sha256-jpjYvU3G3N6nrrBwXJoVEYI/0zw8htfFnhT9ljN3JJw=" crossorigin="anonymous" />
+
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css"
+    integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.1/css/academicons.min.css"
+    integrity="sha256-i1+4qU2G2860dGGIOJscdC30s9beBXjFfzjWLjBRsBg=" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css"
+    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons">
+
+  <!-- Code Syntax Highlighting -->
+  <link rel="stylesheet" href="https://gitcdn.link/repo/jwarby/jekyll-pygments-themes/master/github.css" />
+
+  <!-- Styles -->
+  <link rel="icon" href="./assets/img/Tomato.png">
+  <link rel="stylesheet" href="./assets/css/main.css">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VHPFHC4JTP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-VHPFHC4JTP');
+  </script>
+</head>
+
+<!-- Body -->
+
+<body>
+
+  <!-- Content -->
+  <div class="container project_container mt-5">
+    <!---------------------------- HEADER ---------------------------->
+    <header class="project-title" style="text-align: center; ">
+      <h1 class="project-title" style="font-weight: bold; color: #404040"><img src="./assets/img/Tomato.png"
+          style="height:5%; width:5%">HumanTOMATO: Text-aligned Whole-body Motion Generation</h1>
+      <h3>
+        <a href="https://shunlinlu.github.io" target="_blank" rel="noopener noreferrer">Shunlin Lu</a><sup>🍅 2,
+          3</sup>,
+        <a href="https://lhchen.top" target="_blank" rel="noopener noreferrer">Ling-Hao Chen</a><sup>🍅 1, 2</sup>,
+        <br>
+        <a href="https://ailingzeng.site" target="_blank" rel="noopener noreferrer">Ailing Zeng</a><sup>2</sup>,
+        <a href="https://jinglin7.github.io" target="_blank" rel="noopener noreferrer">Jing Lin</a><sup>1, 2</sup>,
+        <a href="http://zhangruimao.site" target="_blank" rel="noopener noreferrer">Ruimao Zhang</a><sup>3</sup>,
+        <a href="https://leizhang.org" target="_blank" rel="noopener noreferrer">Lei Zhang</a><sup>2</sup>,
+        and
+        <a href="https://scholar.google.com/citations?user=9akH-n8AAAAJ&hl=en" target="_blank"
+          rel="noopener noreferrer">Heung-Yeung Shum</a><sup>1, 2</sup>
+      </h3>
+      <h5><sup>🍅</sup><i>Co-first author. Listing order is random.</i></h5>
+      <h5><sup>1</sup>Tsinghua University, <sup>2</sup>International Digital Economy Academy (IDEA), <br>
+        <sup>3</sup>School of Data Science, Shenzhen Research Institute of Big Data, CUHK (SZ)
+      </h5>
+      <div class="publications project-links">
+        <a href="" class="btn" role="button" target="_blank" rel="noopener noreferrer">arXiv</a>
+        <a href="" class="btn" role="button" target="_blank" rel="noopener noreferrer">Code</a>
+
+      </div>
+      <br>
+
+      <img src="./assets/img/generation/task.gif" style="width: 55%;">
+
+    </header>
+
+    <!---------------------------- ABSTRACT ---------------------------->
+    <div class="h-100 d-flex align-items-center justify-content-center" style="margin-top: 30px">
+      <div class="project-narrow" id="abstract" style="text-align: justify;">
+        <h3 style="text-align: center;">Abstract</h3>
+        <i>
+          This work targets a novel text-driven <b>whole-body</b> motion generation task, which takes a given textual
+          description as input and aims at generating high-quality, diverse, and coherent facial expressions, hand
+          gestures, and body motions simultaneously.
+          Previous works on text-driven motion generation tasks mainly have two limitations: they ignore the key role
+          of fine-grained hand and face controlling in vivid whole-body motion generation, and lack a good alignment
+          between text and motion.
+          To address such limitations, we propose a <u>T</u>ext-aligned wh<u>O</u>le-body <u>M</u>otion
+          gener<u>AT</u>i<u>O</u>n framework, named
+          HumanTOMATO, which is the first attempt to our knowledge towards applicable holistic motion generation in
+          this research area.
+          To tackle this challenging task, our solution includes two key designs: (1) a <u>H</u>olistic
+          <u>H</u>ierarchical VQ-VAE
+          (<i>aka</i> H²VQ) and a Hierarchical-GPT for fine-grained body and hand motion reconstruction and generation
+          with two structured codebooks;
+          and (2) a pre-trained text-motion-alignment model to help generated motion align with the input textual
+          description explicitly.
+          Comprehensive experiments verify that our model has significant advantages in both the quality of generated
+          motions and their alignment with text.
+        </i>
+      </div>
+    </div>
+
+    <div class="h-100 d-flex align-items-center justify-content-center" style="margin-top: 30px">
+      <div class="project-narrow" id="architecture" style="text-align: justify;">
+        <h3 style="text-align: center;">Demo Video</h3>
+      </div>
+    </div>
+
+    <div class="center-container">
+      <div class="card card-video" style="margin-top:20px">
+        <iframe width="100%" style="aspect-ratio: 16 / 9;" src="https://www.youtube.com/embed/PcxUzZ1zg6o"
+          title="HumanMAC: Masked Motion Completion for Human Motion Prediction" frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <!-- <div class="h-100 d-flex align-items-center justify-content-center" style="margin-top: 30px">
+        <div class="project-narrow" id="architecture" style="text-align: justify;">
+          <h3 style="text-align: center;">Highlight Whole-body Motions</h3>
+        </div>
+      </div>
+
+      <div class="center-container">
+        <div class="card card-edit" style="margin-top:20px">
+          <img id="k-eva" src="./assets/img/highlight.png" class="pic">
+          <p style="margin:10px; text-align: justify;">The proposed HumanTOMATO model can generate <b>text-aligned
+              whole-body</b>
+            motions with vivid and harmonious face, hand, and body motion. We show two generated qualitative results.
+          </p>
+        </div>
+      </div> -->
+
+
+    <div style="margin-top:50px; padding: 0px !important">
+      <h3 style="text-align: center;">Highlight Whole-body Motions</h3>
+      <div tab-content figure>
+        <div class="tab-pane fade show active" id="h36m" role="tabpanel" aria-labelledby="h36m-list"
+          style="padding: 0px !important">
+          <div class="card" style="padding: 10px !important; margin-top:10px">
+            <div class="tab-content figure" id="nav-tabContent">
+              <div class="tab-pane fade show active gif" id="switch_eg_1" role="tabpanel">
+                <img src="./assets/img/highlight.png" style="width: 100%;">
+                <p style="margin:10px; text-align: justify;">The proposed HumanTOMATO model can generate
+                  <b>text-aligned
+                    whole-body</b>
+                  motions with vivid and harmonious face, hand, and body motion. We show two generated qualitative
+                  results.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="h-100 d-flex align-items-center justify-content-center" style="margin-top: 30px">
+        <div class="project-narrow" id="architecture" style="text-align: justify;">
+          <h3 style="text-align: center;">System Overview</h3>
+        </div>
+      </div> -->
+
+    <!-- <div class="center-container">
+        <div class="card card-edit" style="margin-top:20px">
+          <img id="k-eva" src="./assets/img/system.png" class="pic">
+          <p style="margin:10px; text-align: justify;">The framework overview of the proposed text-driven whole-body
+            motion generation. (a) Holistic Hierarchical Vector Quantization (H²VQ) to compress fine-grained
+            body-hand motion into two discrete codebooks with hierarchical structure relations. (b) Hierarchical-GPT
+            using motion-aware textual embedding as the input to hierarchically generate body-hand motions. (c) Facial
+            text-conditional VAE (cVAE) to generate the corresponding facial motions. The outputs of body, hand, and
+            face motions comprise a vivid and text-aligned whole-body motion.
+          </p>
+        </div>
+      </div> -->
+
+    <div style="margin-top:50px; padding: 0px !important">
+      <h3 style="text-align: center;">System Overview</h3>
+      <div tab-content figure>
+        <div class="tab-pane fade show active" id="h36m" role="tabpanel" aria-labelledby="h36m-list"
+          style="padding: 0px !important">
+          <div class="card" style="padding: 10px !important; margin-top:10px">
+            <div class="tab-content figure" id="nav-tabContent">
+              <div class="tab-pane fade show active gif" id="switch_eg_1" role="tabpanel">
+                <img src="./assets/img/system.png" style="width: 100%;">
+                <p style="margin:10px; text-align: justify;">The framework overview of the proposed text-driven
+                  whole-body
+                  motion generation. (a) Holistic Hierarchical Vector Quantization (H²VQ) to compress fine-grained
+                  body-hand motion into two discrete codebooks with hierarchical structure relations. (b)
+                  Hierarchical-GPT
+                  using motion-aware textual embedding as the input to hierarchically generate body-hand motions.
+                  (c) Facial
+                  text-conditional VAE (cVAE) to generate the corresponding facial motions. The outputs of body,
+                  hand, and
+                  face motions comprise a vivid and text-aligned whole-body motion.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div style="margin-top:50px; padding: 0px !important">
+      <h3 style="text-align: center; margin-bottom:20px">Comparing with GT
+      </h3>
+      <div tab-content figure>
+        <div class="tab-pane fade show active" id="h36m" role="tabpanel" aria-labelledby="h36m-list"
+          style="padding: 0px !important">
+          <div class="card" style="padding: 10px !important; margin-top:10px">
+            <div class="tab-content figure" id="nav-tabContent">
+              <div class="tab-pane fade show active gif" id="perform" role="tabpanel">
+                <div style="display: flex; justify-content: space-around;">
+                  <div style="width: 49%;">
+                    <a style="text-align: center; display: inline-block; width: 100%;">HumanTOMATO</a>
+                    <img class="gif" src="assets/img/wgt/ours.gif">
+                  </div>
+                  <div style="width: 49%;">
+                    <a style="text-align: center; display: inline-block; width: 100%;">Ground Truth (GT)</a>
+                    <img class="gif" src="assets/img/wgt/gt.gif">
+                  </div>
+                </div>
+
+                <!-- <div style="text-align: justify; width: 100%">
+                  <a style='text-align: justify;width:49%; display: inline-block; text-align: center'>HumanTOMATO</a>
+                  <a style='text-align: justify;width:49%; display: inline-block; text-align: center'>Ground Truth (GT)</a>
+                </div>
+                <img class="gif" src="assets/img/wgt/ours.gif" style='width:49%'>
+                <img class="gif" src="assets/img/wgt/gt.gif" style='width:49%'> -->
+
+                <p style="text-align: center; color:purple"><b><i>man swivels left to right with left hand up towards
+                      the
+                      face.</i></b></p>
+              </div>
+              <p style="text-align: justify; margin: 10px;">We found that the generated results of HumanTOMATO
+                were even more <b><i>vivid</i></b> than GT.
+                When scratching his face, the man <b><i>even stretch out his index finger</i></b>. </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div style="margin-top:50px; padding: 0px !important">
+      <h3 style="text-align: center; margin-bottom:20px">Comparing with Baselines
+      </h3>
+      <div tab-content figure>
+        <div class="tab-pane fade show active" id="h36m" role="tabpanel" style="padding: 0px !important">
+          <div class="h-100 d-flex align-items-center justify-content-center">
+            <div class="dropdown list-group">
+              <button class="btn dropdown-toggle" style="max-width:600px" type="button" id="h36m-btn"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="selection">case-1</span>
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="list-tab" role="tablist">
+                <a class="dropdown-item dropdown-item-action" href="#case-1" id="h36m-dropdown" data-toggle="list"
+                  role="tab" aria-controls="case-1">case-1</a>
+                <a class="dropdown-item dropdown-item-action" href="#case-2" id="h36m-dropdown" data-toggle="list"
+                  role="tab" aria-controls="case-2">case-2</a>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="padding: 10px !important; margin-top:10px">
+            <div class="tab-content figure" id="nav-tabContent">
+              <div class="tab-pane fade show active gif" id="case-1" role="tabpanel">
+                <div style="display: flex; justify-content: space-around;">
+                  <div style="width: 49%;">
+                    <a style="text-align: center; display: inline-block; width: 100%;">T2M-GPT</a>
+                    <img class="gif" src="./assets/img/baseline/back-gpt.gif" >
+                  </div>
+                  <div style="width: 49%;">
+                    <a style="text-align: center; display: inline-block; width: 100%;">HumanTOMATO</a>
+                    <img class="gif" src="./assets/img/baseline/back-ours.gif">
+                  </div>
+                </div>
+                <!-- <div style="text-align: justify; width: 100%">
+                  <a style='text-align: justify;width:49%; display: inline-block; text-align: center'>T2M-GPT</a>
+                  <a style='text-align: justify;width:49%; display: inline-block; text-align: center'>HumanTOMATO</a>
+                </div>
+                <img class="gif" src="assets/img/baseline/back-gpt.gif" style='width:49%'>
+                <img class="gif" src="assets/img/baseline/back-ours.gif" style='width:49%'>
+                 -->
+                <p style="text-align: center; color:purple"><b><i>a person walks forward and then backwards.</i></b></p>
+              </div>
+              <div class="tab-pane fade" id="case-2" role="tabpanel">
+                <div style="display: flex; justify-content: space-around;">
+                  <div style="width: 49%;">
+                    <a style="text-align: center; display: inline-block; width: 100%;">T2M-GPT</a>
+                    <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                    data-src="./assets/img/baseline/gorilla-gpt.gif" >
+                  </div>
+                  <div style="width: 49%;">
+                    <a style="text-align: center; display: inline-block; width: 100%;">HumanTOMATO</a>
+                    <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                    data-src="./assets/img/baseline/gorilla-ours.gif">
+                  </div>
+                </div>
+
+                <!-- <div style="text-align: justify; width: 100%">
+                  <a style='text-align: justify;width:49%; display: inline-block; text-align: center'>T2M-GPT</a>
+                  <a style='text-align: justify;width:49%; display: inline-block; text-align: center'>HumanTOMATO</a>
+                </div>
+                <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                  data-src="assets/img/baseline/gorilla-gpt.gif" style='width:49%'>
+                <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                  data-src="assets/img/baseline/gorilla-ours.gif" style='width:49%'> -->
+
+                <p style="text-align: center; color:purple"><b><i>a person crouches low like a gorilla and walks on all
+                      fours
+                      from left to right.</i></b></p>
+              </div>
+              <p style="text-align: justify; margin: 10px;">We compare the generation result of HumanTOMATO with
+                baselines.
+                Our model has obvious advantages in trajectory, sequentiality and motion rationality.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+    <div style="margin-top:50px; padding: 0px !important">
+      <h3 style="text-align: center; margin-bottom:20px">How does Motion-aware language prior help the motion
+        generation?
+      </h3>
+      <div class="justify-content-center list-group list-group-horizontal" id="list-tab" role="tablist">
+        <div class="list-group list-group-horizontal" style="max-width:600px">
+          <a class="list-group-item list-group-item-action active" data-toggle="list" href="#Whole-body" role="tab"
+            aria-controls="Whole-body" style="text-align: center;min-width: max-content">Whole-body</a>
+          <a class="list-group-item list-group-item-action" data-toggle="list" href="#Body-only" role="tab"
+            aria-controls="Body-only" style="text-align: center;">Body-only</a>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="tab-content figure" id="nav-tabContent" style="padding: 0px !important">
+      <div class="tab-pane fade show active" id="Whole-body" role="tabpanel" aria-labelledby="Whole-body"
+        style="padding: 0px !important">
+        <div class="h-100 d-flex align-items-center justify-content-center">
+          <div class="dropdown list-group">
+            <button class="btn dropdown-toggle" style="max-width:600px" type="button" id="h36m-btn"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="selection">Turn</span>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="list-tab" role="tablist">
+              <a class="dropdown-item dropdown-item-action" href="#Turn" id="h36m-dropdown" data-toggle="list"
+                role="tab" aria-controls="Turn">Turn</a>
+              <a class="dropdown-item dropdown-item-action" href="#Kick" id="h36m-dropdown" data-toggle="list"
+                role="tab" aria-controls="Kick">Kick</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="padding: 10px !important; margin-top:10px">
+          <div class="tab-content figure" id="nav-tabContent">
+            <div class="tab-pane fade show active gif" id="Turn" role="tabpanel">
+              <div style="display: flex; justify-content: space-around;">
+                <div style="width: 49%;">
+                  <a style="text-align: center; display: inline-block; width: 100%;">w/o TMR</a>
+                  <img class="gif" src="./assets/img/tmr/180wotmr.gif" >
+                </div>
+                <div style="width: 49%;">
+                  <a style="text-align: center; display: inline-block; width: 100%;">w/ TMR</a>
+                  <img class="gif" src="./assets/img/tmr/180wtmr.gif">
+                </div>
+              </div>
+
+              <!-- <div style="text-align: justify; width: 100%">
+                <a style='text-align: justify;width:49%; display: inline-block; text-align: center'>w/o TMR</a>
+                <a style='text-align: justify;width:49%; display: inline-block; text-align: center'>w/ TMR</a>
+              </div>
+              <img class="gif" src="./assets/img/tmr/180wotmr.gif" style='width:49%'>
+              <img class="gif" src="./assets/img/tmr/180wtmr.gif" style='width:49%'> -->
+              <p style="text-align: center; color:purple; clear: both;"><b><i>The man walks forward a couple steps, turns right 180
+                    degrees and then walks back.
+                  </i></b></p>
+            </div>
+            <div class="tab-pane fade" id="Kick" role="tabpanel">
+              <div style="display: flex; justify-content: space-around;">
+                <div style="width: 49%;">
+                  <a style="text-align: center; display: inline-block; width: 100%;">w/o TMR</a>
+                  <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                  data-src="./assets/img/tmr/kick-gpt.gif" >
+                </div>
+                <div style="width: 49%;">
+                  <a style="text-align: center; display: inline-block; width: 100%;">w/ TMR</a>
+                  <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                  data-src="./assets/img/tmr/kick-ours.gif">
+                </div>
+              </div>
+
+              <!-- <div style="width: 100%">
+                <a style='width:49%; display: inline-block; text-align: center'>w/o TMR</a>
+                <a style='width:49%; display: inline-block; text-align: center'>w/ TMR</a>
+              </div>
+              <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                data-src="./assets/img/tmr/kick-gpt.gif" style='width:49%'>
+              <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                data-src="./assets/img/tmr/kick-ours.gif" style='width:49%'>
+                 -->
+              <p style="text-align: center; color:purple"><b><i>a person performs a standing kick.</i></b></p>
+            </div>
+            <p style="text-align: justify; margin: 10px;">To explore how TMR helps the motion generation,
+              we perform our ablation on the Motion-X dataset first. Results show that motion-aware language prior can
+              understand the motion dynamic clues better
+              on sequentiality, directions, and dynamics. Our method helps the
+              text-motion alignment on whole-body motion generation.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="Body-only" role="tabpanel" aria-labelledby="Body-only"
+        style="padding: 0px !important">
+        <div class="h-100 d-flex align-items-center justify-content-center">
+          <div class="dropdown list-group">
+            <button class="btn dropdown-toggle" style="max-width:600px" type="button" id="humaneva-btn"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="selection">clockwisely</span>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="list-tab" role="tablist">
+              <a class="dropdown-item dropdown-item-action" href="#clockwisely" id="humaneva-dropdown"
+                data-toggle="list" role="tab" aria-controls="clockwisely">clockwisely</a>
+              <a class="dropdown-item dropdown-item-action" href="#right" id="humaneva-dropdown" data-toggle="list"
+                role="tab" aria-controls="right">right</a>
+              <a class="dropdown-item dropdown-item-action" href="#jump" id="humaneva-dropdown" data-toggle="list"
+                role="tab" aria-controls="jump">jump</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="padding: 10px !important; margin-top:10px">
+          <div class="tab-content figure" id="nav-tabContent">
+
+            
+
+            <div class="tab-pane fade show active" id="clockwisely" role="tabpanel">
+              <div style="display: flex; justify-content: space-around;">
+                <div style="width: 49%;">
+                  <a style="text-align: center; display: inline-block; width: 100%;">w/o TMR</a>
+                  <img class="gif" src="./assets/img/tmr/h3d/a_person_walks_clockwisely_t2m_gpt.gif">
+                </div>
+                <div style="width: 49%;">
+                  <a style="text-align: center; display: inline-block; width: 100%;">w/ TMR</a>
+                  <img class="gif" src="./assets/img/tmr/h3d/a_person_walks_clockwisely.gif">
+                </div>
+              </div>
+
+              <!-- <div style="text-align: justify; width: 100%">
+                <a style='text-align: justify;width:49%; display: inline-block; text-align: center'>w/o TMR</a>
+                <a style='text-align: justify;width:49%; display: inline-block; text-align: center'>w/ TMR</a>
+              </div>
+              <img class="gif" src="./assets/img/tmr/h3d/a_person_walks_clockwisely_t2m_gpt.gif" style='width:49%'>
+              <img class="gif" src="./assets/img/tmr/h3d/a_person_walks_clockwisely.gif" style='width:49%'> -->
+
+              <p style="text-align: center; color:purple"><b><i>A person walks clockwise-ly.
+                  </i></b></p>
+            </div>
+
+            <div class="tab-pane fade" id="right" role="tabpanel">
+              <div style="display: flex; justify-content: space-around;">
+                <div style="width: 49%;">
+                  <a style="text-align: center; display: inline-block; width: 100%;">w/o TMR</a>
+                  <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                data-src="./assets/img/tmr/h3d/a_person_walks_forward__turn_right__finally_turn_right_t2m_gpt.gif">
+                </div>
+                <div style="width: 49%;">
+                  <a style="text-align: center; display: inline-block; width: 100%;">w/ TMR</a>
+                  <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                data-src="./assets/img/tmr/h3d/a_person_walks_forward__turn_right__finally_turn_right.gif">
+                </div>
+              </div>
+
+              <!-- <div style="text-align: justify; width: 100%">
+                <a style='text-align: justify;width:49%; display: inline-block; text-align: center'>w/o TMR</a>
+                <a style='text-align: justify;width:49%; display: inline-block; text-align: center'>w/ TMR</a>
+              </div>
+              <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                data-src="./assets/img/tmr/h3d/a_person_walks_forward__turn_right__finally_turn_right_t2m_gpt.gif"
+                style='width:49%'>
+              <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                data-src="./assets/img/tmr/h3d/a_person_walks_forward__turn_right__finally_turn_right.gif"
+                style='width:49%'> -->
+              <p style="text-align: center; color:purple"><b><i>a person walks forward, turn right, finally turn right.
+                  </i></b></p>
+            </div>
+
+            <div class="tab-pane fade" id="jump" role="tabpanel">
+              <div style="display: flex; justify-content: space-around;">
+                <div style="width: 49%;">
+                  <a style="text-align: center; display: inline-block; width: 100%;">w/o TMR</a>
+                  <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                data-src="./assets/img/tmr/h3d/A_person_walks_forward_and_jump_twice_t2m_gpt.gif" >
+                </div>
+                <div style="width: 49%;">
+                  <a style="text-align: center; display: inline-block; width: 100%;">w/ TMR</a>
+                  <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                data-src="./assets/img/tmr/h3d/A_person_walks_forward_and_jump_twice.gif">
+                </div>
+              </div>
+
+              <!-- <div style="text-align: justify; width: 100%">
+                <a style='text-align: justify;width:49%; display: inline-block; text-align: center'>w/o TMR</a>
+                <a style='text-align: justify;width:49%; display: inline-block; text-align: center'>w/ TMR</a>
+              </div>
+              <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                data-src="./assets/img/tmr/h3d/A_person_walks_forward_and_jump_twice_t2m_gpt.gif" style='width:49%'>
+              <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                data-src="./assets/img/tmr/h3d/A_person_walks_forward_and_jump_twice.gif" style='width:49%'> -->
+              <p style="text-align: center; color:purple"><b><i>A person walks forward and jump twice.
+                  </i></b></p>
+            </div>
+            <p style="text-align: justify; margin: 10px;">Additionally, our Motion-aware language prior also benefits
+              the body-only motion generation.
+              We take the T2M-GPT as a baseline and perform ablation on the HumanML3D dataset. The T2M-GPT model with
+              Motion-aware language prior is shown on the right side. Results show that our method also helps the
+              text-motion alignment on body-only motion generation.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div style="margin-top:50px; padding: 0px !important">
+      <h3 style="text-align: center; margin-bottom:20px">Examples of Motion Reconstruction
+      </h3>
+      <div tab-content figure>
+        <div class="tab-pane fade show active" role="tabpanel" style="padding: 0px !important">
+          <div class="h-100 d-flex align-items-center justify-content-center">
+            <div class="dropdown list-group">
+              <button class="btn dropdown-toggle" style="max-width:600px" type="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <span class="selection">perform</span>
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="list-tab" role="tablist">
+                <a class="dropdown-item dropdown-item-action" href="#perform1" data-toggle="list" role="tab"
+                  aria-controls="perform1">perform</a>
+                <a class="dropdown-item dropdown-item-action" href="#humanml" data-toggle="list" role="tab"
+                  aria-controls="humanml">humanml</a>
+                <a class="dropdown-item dropdown-item-action" href="#kungfu" data-toggle="list" role="tab"
+                  aria-controls="kungfu">kungfu</a>
+                <a class="dropdown-item dropdown-item-action" href="#music" data-toggle="list" role="tab"
+                  aria-controls="music">music</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="padding: 10px !important; margin-top:10px">
+            <div class="tab-content figure" id="nav-tabContent">
+              <div class="tab-pane fade show active" id="perform1" role="tabpanel">
+                <div style="display: flex; justify-content: space-around;">
+                  <div style="width: 32%;">
+                    <a style="text-align: center; display: inline-block; width: 100%;">GT</a>
+                    <img class="gif" src="./assets/img/recon/perform_000243_gt.gif">
+                  </div>
+                  <div style="width: 32%;">
+                    <a style="text-align: center; display: inline-block; width: 100%;">Vanilla</a>
+                    <img class="gif" src="./assets/img/recon/perform_000243_vq.gif">
+                  </div>
+                  <div style="width: 32%;">
+                    <a style="text-align: center; display: inline-block; width: 100%;">H²VQ</a>
+                    <img class="gif" src="./assets/img/recon/perform_000243_h2vq.gif">
+                  </div>
+                </div>
+
+                <!-- <div style="text-align: justify; width: 100%">
+                  <a style='text-align: justify;width:32%; display: inline-block; text-align: center'>GT</a>
+                  <a style='text-align: justify;width:32%; display: inline-block; text-align: center'>Vanilla
+                    VQ</a>
+                  <a style='text-align: justify;width:32%; display: inline-block; text-align: center'>H²VQ</a>
+                </div>
+                <img class="gif" src="assets/img/recon/perform_000243_gt.gif" style='width:32%'>
+                <img class="gif" src="assets/img/recon/perform_000243_vq.gif" style='width:32%'>
+                <img class="gif" src="assets/img/recon/perform_000243_h2vq.gif" style='width:32%'> -->
+              </div>
+
+              <div class="tab-pane fade" id="humanml" role="tabpanel">
+                <div style="display: flex; justify-content: space-around;">
+                  <div style="width: 32%;">
+                    <a style="text-align: center; display: inline-block; width: 100%;">GT</a>
+                    <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                    data-src="assets/img/recon/humanml_000022_gt.gif">
+                  </div>
+                  <div style="width: 32%;">
+                    <a style="text-align: center; display: inline-block; width: 100%;">Vanilla</a>
+                    <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                    data-src="assets/img/recon/humanml_000022_vq.gif">
+                  </div>
+                  <div style="width: 32%;">
+                    <a style="text-align: center; display: inline-block; width: 100%;">H²VQ</a>
+                    <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                    data-src="assets/img/recon/humanml_000022_h2vq.gif">
+                  </div>
+                </div>
+
+
+                <!-- <div style="text-align: justify; width: 100%">
+                  <a style='text-align: justify;width:32%; display: inline-block; text-align: center'>GT</a>
+                  <a style='text-align: justify;width:32%; display: inline-block; text-align: center'>Vanilla
+                    VQ</a>
+                  <a style='text-align: justify;width:32%; display: inline-block; text-align: center'>H²VQ</a>
+                </div>
+                <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                  data-src="assets/img/recon/humanml_000022_gt.gif" style='width:32%'>
+                <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                  data-src="assets/img/recon/humanml_000022_vq.gif" style='width:32%'>
+                <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                  data-src="assets/img/recon/humanml_000022_h2vq.gif" style='width:32%'> -->
+              </div>
+              <div class="tab-pane fade" id="kungfu" role="tabpanel">
+                <div style="display: flex; justify-content: space-around;">
+                  <div style="width: 32%;">
+                    <a style="text-align: center; display: inline-block; width: 100%;">GT</a>
+                    <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                    data-src="assets/img/recon/kungfu_subset_0_000191_gt.gif">
+                  </div>
+                  <div style="width: 32%;">
+                    <a style="text-align: center; display: inline-block; width: 100%;">Vanilla</a>
+                    <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                    data-src="assets/img/recon/kungfu_subset_0_000191_vq.gif">
+                  </div>
+                  <div style="width: 32%;">
+                    <a style="text-align: center; display: inline-block; width: 100%;">H²VQ</a>
+                    <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                    data-src="assets/img/recon/kungfu_subset_0_000191_h2vq.gif">
+                  </div>
+                </div>
+
+
+                <!-- <div style="text-align: justify; width: 100%">
+                  <a style='text-align: justify;width:32%; display: inline-block; text-align: center'>GT</a>
+                  <a style='text-align: justify;width:32%; display: inline-block; text-align: center'>Vanilla
+                    VQ</a>
+                  <a style='text-align: justify;width:32%; display: inline-block; text-align: center'>H²VQ</a>
+                </div>
+                <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                  data-src="assets/img/recon/kungfu_subset_0_000191_gt.gif" style='width:32%'>
+                <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                  data-src="assets/img/recon/kungfu_subset_0_000191_vq.gif" style='width:32%'>
+                <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                  data-src="assets/img/recon/kungfu_subset_0_000191_h2vq.gif" style='width:32%'> -->
+              </div>
+              <div class="tab-pane fade" id="music" role="tabpanel">
+                <div style="display: flex; justify-content: space-around;">
+                  <div style="width: 32%;">
+                    <a style="text-align: center; display: inline-block; width: 100%;">GT</a>
+                    <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                    data-src="assets/img/recon/music_subset_1_000027_gt.gif">
+                  </div>
+                  <div style="width: 32%;">
+                    <a style="text-align: center; display: inline-block; width: 100%;">Vanilla</a>
+                    <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                    data-src="assets/img/recon/music_subset_1_000027_vq.gif">
+                  </div>
+                  <div style="width: 32%;">
+                    <a style="text-align: center; display: inline-block; width: 100%;">H²VQ</a>
+                    <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                    data-src="assets/img/recon/music_subset_1_000027_h2vq.gif">
+                  </div>
+                </div>
+
+
+                <!-- <div style="text-align: justify; width: 100%">
+                  <a style='text-align: justify;width:32%; display: inline-block; text-align: center'>GT</a>
+                  <a style='text-align: justify;width:32%; display: inline-block; text-align: center'>Vanilla
+                    VQ</a>
+                  <a style='text-align: justify;width:32%; display: inline-block; text-align: center'>H²VQ</a>
+                </div>
+                <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                  data-src="assets/img/recon/music_subset_1_000027_gt.gif" style='width:32%'>
+                <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                  data-src="assets/img/recon/music_subset_1_000027_vq.gif" style='width:32%'>
+                <img class="gif lazy" src="./assets/img/transfer/placeholder_comparison.png"
+                  data-src="assets/img/recon/music_subset_1_000027_h2vq.gif" style='width:32%'> -->
+              </div>
+              <p style="text-align: justify; margin: 10px;">We take the motion reconstruction as the pretext task
+                to
+                verify why H²VQ is better than vanilla VQ.
+                As shown in the demos, our H²VQ has a lower reconstruction error than vanilla VQ.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="h-100 d-flex align-items-center justify-content-center" style="margin-top: 30px">
+      <div class="project-narrow" id="bibtex" style="text-align: justify;">
+        <h3 style="text-align: center;">Citation</h3>
+        <div class="bibtex">
+
+          <figure class="highlight">
+            <pre><code class="language-bibtex" data-lang="bibtex"><span class="nc">@article</span><span class="p">{</span><span class="nl">humantomato</span><span class="p">,</span>
+  <span class="na">title</span><span class="p">=</span><span class="s">{HumanTOMATO: Text-aligned Whole-body Motion Generation}</span><span class="p">,</span>
+  <span class="na">author</span><span class="p">=</span><span class="s">{Lu, Shunlin and Chen, Ling-Hao and Zeng, Ailing and Lin, Jing and Zhang, Ruimao and Zhang, Lei and Shum, Heung-Yeung}</span><span class="p">,</span>
+  <span class="na">journal</span><span class="p">=</span><span class="s">{Arxiv}</span><span class="p">,</span>
+  <span class="na">year</span><span class="p">=</span><span class="s">{2023}</span>
+<span class="p">}</span></code></pre>
+          </figure>
+
+
+        </div>
+      </div>
+    </div>
+
+    <br>
+    <p style="text-align:right;font-size:small;">
+      The website template was adapted from <a href="https://lhchen.top/Human-MAC">HumanMAC Project</a>.
+    </p>
+
+  </div>
+
+
+
+
+  <!-- JavaScripts -->
+  <!-- jQuery -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+  <!-- Bootsrap & MDB scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"
+    integrity="sha256-SyTu6CwrfOhaznYZPoolVw2rxoY7lKYKQvqbtqN93HI=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js"
+    integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script>
+
+  <!-- Mansory & imagesLoaded -->
+  <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"
+    integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+  <script defer src="./assets/js/mansory.js" type="text/javascript"></script>
+
+  <!-- Medium Zoom JS -->
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"
+    integrity="sha256-EdPgYcPk/IIrw7FYeuJQexva49pVRZNmt3LculEr7zM=" crossorigin="anonymous"></script>
+  <script src="./assets/js/zoom.js"></script><!-- Load Common JS -->
+  <script src="./assets/js/common.js"></script>
+
+  <!-- MathJax -->
+  <script type="text/javascript">
+    window.MathJax = {
+      tex: {
+        tags: 'ams'
+      }
+    };
+  </script>
+  <script defer type="text/javascript" id="MathJax-script"
+    src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+  <script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+  <script>
+    $(function () {
+      $(".dropdown-menu a").click(function () {
+        var selText = $(this).text();
+        $(this).parent().parent().find(".selection").html(selText);
+      });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      var lazyloadThrottleTimeout;
+
+      var elements = document.getElementsByClassName('dropdown-item');
+
+      function lazyload(event) {
+        if (lazyloadThrottleTimeout) {
+          clearTimeout(lazyloadThrottleTimeout);
+        }
+        img_id = this.text
+        img2 = $("#" + img_id + " img")
+        // .children("img")
+        console.log(img2)
+        for (var i = 0; i < img2.length; i++) {
+          img = img2.get(i)
+          if ($(img).hasClass('lazy')) {
+            img.src = img.dataset.src;
+            img.classList.remove('lazy');
+            lazyloadThrottleTimeout = setTimeout(function () { }, 20);
+          }
+        }
+      }
+
+      Array.from(elements).forEach((element) => {
+        element.addEventListener('click', lazyload);
+      });
+    });
+  </script>
+</body>
+
+</html>
